@@ -40,7 +40,7 @@ else()
     FetchContent_Declare(
         libsparseir
         GIT_REPOSITORY https://github.com/SpM-lab/libsparseir.git
-        GIT_TAG main
+        GIT_TAG fortran_test
     )
 
     # Set options for libsparseir build
@@ -69,7 +69,8 @@ if(BUILD_TESTING)
     )
 
     # Link with libsparseir
-    target_link_libraries(test_sparseir_fortran PRIVATE sparseir)
+    target_link_libraries(test_sparseir_fortran PRIVATE sparseir sparseir_fortran)
+    target_include_directories(test_sparseir_fortran PRIVATE $<TARGET_PROPERTY:sparseir_fortran,Fortran_MODULE_DIRECTORY>)
 
     # Add test
     add_test(NAME sparseir_fortran_test COMMAND test_sparseir_fortran)
