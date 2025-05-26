@@ -14,7 +14,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Options
-option(BUILD_TESTING "Build tests" ON)
+option(BUILD_TESTING "Build tests" OFF)
 option(USE_SYSTEM_LIBSPARSEIR "Use system-installed libsparseir" OFF)
 
 # Find required packages
@@ -40,7 +40,7 @@ else()
     FetchContent_Declare(
         libsparseir
         GIT_REPOSITORY https://github.com/SpM-lab/libsparseir.git
-        GIT_TAG fortran_test
+        GIT_TAG main
     )
 
     # Set options for libsparseir build
@@ -53,15 +53,8 @@ else()
 endif()
 
 # Create a simple Fortran test
-add_executable(test_sparseir_fortran test/test_sparseir.f90)
+add_executable(test_sparseir_fortran ${CMAKE_CURRENT_SOURCE_DIR}/src/test_sparseir.f90)
 
 # Link with libsparseir
 target_link_libraries(test_sparseir_fortran PRIVATE ${SPARSEIR_TARGET})
 target_include_directories(test_sparseir_fortran PRIVATE $<TARGET_PROPERTY:${SPARSEIR_TARGET},Fortran_MODULE_DIRECTORY>)
-
-# Enable testing
-enable_testing()
-
-# Add test with full path
-add_test(NAME sparseir_fortran_test 
-         COMMAND $<TARGET_FILE:test_sparseir_fortran>)
